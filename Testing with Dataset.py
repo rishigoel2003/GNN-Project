@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
-
+import matplotlib.pyplot as plt
 
 
 # Assuming the M5 dataset is stored in a CSV file
@@ -20,51 +20,12 @@ dataraw = product_data_subset.iloc[2:,0:]
 
 
 
-# heirarchy = np.zeros((19410,4))
 
-# for i in range(10):
-#     heirarchy[i*1941:(i+1)*1941-1,1] = np.sum(dataraw[:,i], axis=1)
+#ETS bottom up
 
-print(dataraw)
-
-data = product_data_subset
-
-# # Perform bottom-up forecasting
-# forecasts = []
-# for group in hierarchy_groups:
-#     group_forecasts = []
-#     for level in hierarchy_levels:
-#         # Select the time series data for the current group and level
-#         group_level_data = data[(data['group'] == group) & (data['level'] == level)]
-        
-#         # Extract the time series values
-#         time_series = group_level_data['value']
-        
-#         # Perform ETS forecasting on the time series
-#         model = ExponentialSmoothing(time_series)
-#         model_fit = model.fit()
-#         forecast = model_fit.forecast(1)
-        
-#         # Append the forecasted value to the group's forecast
-#         group_forecasts.append(forecast[0])
-    
-#     # Sum the forecasts across levels to get the group forecast
-#     group_forecast = sum(group_forecasts)
-    
-#     # Append the group forecast to the overall forecasts
-#     forecasts.append(group_forecast)
-
-# # Assign the forecasts to the appropriate hierarchy levels and groups
-# # ...
-
-# # Print or use the forecasts as desired
-# print(forecasts)
-
-
-
-
-forecasts = []
-for i in range(1):
+n=10
+forecasts = np.zeros((n,28))
+for i in range(n):
     # Extract the time series values
     time_series = dataraw.iloc[:,i].to_numpy()
         
@@ -73,13 +34,33 @@ for i in range(1):
     model_fit = model.fit()
     forecast = model_fit.forecast(28)
 
-    forecasts.append(forecast)
+    forecasts[i,:] = forecast[:]
 
 # Print or use the forecasts as desired
+
 print(forecasts)
 
 
+initial = list(range(1901, 1942))
+after = range(1942, 1970)
 
+for j in range(n):
+    plt.plot(initial,dataraw.iloc[1900:,j].to_numpy())
+    plt.plot(after,forecasts[j,:])
+
+plt.show()
+
+
+#ETS 
+
+
+
+
+
+
+
+
+#light gbm bottom up
 
 
 
